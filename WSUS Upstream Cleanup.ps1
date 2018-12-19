@@ -43,13 +43,10 @@ function Deny-Updates {
     [Int32]$portNumber = 8530
     
     #Load .NET assembly
-    
     [void][reflection.assembly]::LoadWithPartialName("Microsoft.UpdateServices.Administration")
-    
     $count = 0
-    
+
     #Connect to WSUS Server
-    
     $updateServer = [Microsoft.UpdateServices.Administration.AdminProxy]::getUpdateServer(
         [String]$updateServer1,
         [Boolean]$useSecureConnection,
@@ -57,21 +54,15 @@ function Deny-Updates {
     )
     
     $updatescope = New-Object Microsoft.UpdateServices.Administration.UpdateScope
-    
     $u=$updateServer.GetUpdates($updatescope)
     
-        foreach ($u1 in $u ) {
-    
+        foreach ($u1 in $u ) {    
             if ($u1.IsSuperseded -eq 'True'-Or $u1.Title -like '*Itanium*' -Or $u1.Title -like '*Preview*' -Or $u1.Title -like "*Malicious Software Removal Tool*") {
-    
-                $u1.Decline()
-    
-                $count=$count + 1
-    
+                $u1.Decline() 
+                $count=$count + 1  
                 }
         }
-    
-    }
+}
 
 Deny-Updates
 
